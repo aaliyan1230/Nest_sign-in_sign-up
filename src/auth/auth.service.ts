@@ -80,7 +80,8 @@ async register(userDto: CreateUserDto): Promise<RegistrationStatus> {
   }
 
   private _createToken({ username }: UserDto): any {
-    const expiresIn = process.env.EXPIRESIN;
+    // const expiresIn = process.env.EXPIRESIN;
+    const expiresIn = '1d';
 
     const user: JwtPayload = { username };
     const accessToken = this.jwtService.sign(user);

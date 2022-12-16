@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LocalStrategy } from './local.strategy';
+// import { LocalStrategy } from './local.strategy';
 import { UsersModule } from '../users/users.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
@@ -20,7 +20,8 @@ import { AuthController } from './auth.controller';
       // secret: process.env.SECRETKEY,
       secret: jwtConstants.secret,
       signOptions: {
-        expiresIn: process.env.EXPIRESIN,
+        // expiresIn: process.env.EXPIRESIN,
+        expiresIn: '1d',
       },
     }),
   ],
