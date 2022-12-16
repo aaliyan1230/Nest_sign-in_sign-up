@@ -19,6 +19,6 @@ import { AuthService } from './auth/auth.service';
     synchronize: true,
   }),],
   controllers: [AppController],
-  providers: [AppService, AuthService],
+  providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {};
