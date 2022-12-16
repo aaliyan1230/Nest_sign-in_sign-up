@@ -48,6 +48,7 @@ export class UsersService {
 
   async create(userDto: CreateUserDto): Promise<UserDto> {
     const { username, password, email } = userDto;
+    // console.log('userdto', userDto)
 
     // check if the user exists in the db
     const userInDb = await this.userRepo.findOne({ where: { username } });
@@ -73,18 +74,18 @@ export class UsersService {
 
 
 
-  private readonly users = [
-    {
-      userId: 1,
-      username: 'john',
-      password: 'changeme',
-    },
-    {
-      userId: 2,
-      username: 'maria',
-      password: 'guess',
-    },
-  ];
+  // private readonly users = [
+  //   {
+  //     userId: 1,
+  //     username: 'john',
+  //     password: 'changeme',
+  //   },
+  //   {
+  //     userId: 2,
+  //     username: 'maria',
+  //     password: 'guess',
+  //   },
+  // ];
 
 //   findAll(): Promise<User[]> {
 //     return this.userRepo.find();

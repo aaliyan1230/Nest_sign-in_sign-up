@@ -24,12 +24,14 @@ import {
     public async register(
       @Body() createUserDto: CreateUserDto,
     ): Promise<RegistrationStatus> {
+      // console.log('creuserdto', createUserDto);
       const result: RegistrationStatus = await this.authService.register(
         createUserDto,
       );
+      // console.log('result', result);
   
       if (!result.success) {
-        throw new HttpException(result.message, HttpStatus.BAD_REQUEST);
+        throw new HttpException(result.message, HttpStatus.BAD_REQUEST, {cause: new Error(result.message)});
       }
   
       return result;

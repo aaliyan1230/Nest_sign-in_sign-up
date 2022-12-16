@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
-import { bcrypt } from 'bcrypt';
-import { Jwt } from 'jsonwebtoken';
 import { JwtService } from '@nestjs/jwt';
 import { UserDto } from 'src/users/dto/Userdto';
 import { CreateUserDto } from 'src/users/dto/CreateUserdto';
@@ -48,6 +46,7 @@ async register(userDto: CreateUserDto): Promise<RegistrationStatus> {
 
     try {
       await this.usersService.create(userDto);
+      // console.log(user);
     } catch (err) {
       status = {
         success: false,
