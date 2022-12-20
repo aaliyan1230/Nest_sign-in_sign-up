@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UserEntity } from './entity/user.entity';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { toUserDto } from 'src/shared/mapper/toUserdto';
 import { UserDto } from './dto/Userdto';
@@ -9,6 +9,7 @@ import { HttpException } from '@nestjs/common/exceptions';
 import { HttpStatus } from '@nestjs/common/enums';
 import { CreateUserDto } from './dto/CreateUserdto';
 import { comparePasswords } from 'src/shared/utils';
+import { UpdateUserDto } from './dto/UpdateUserdto';
 
 export type User = any;
 
@@ -65,6 +66,52 @@ export class UsersService {
     await this.userRepo.save(user);
 
     return toUserDto(user);
+  }
+
+  async update(id:string, userDto: UpdateUserDto): Promise<UserDto> {
+    const { username, password, email } = userDto;
+    // console.log('userdto', userDto)
+    let updatedUser={};
+   if(username!==undefined){
+    updatedUser={...updatedUser, username};
+   }
+   if(email!==undefined){
+    updatedUser={...updatedUser, email};
+   }
+   if(password!==undefined){
+    updatedUser={...updatedUser, password};
+   }
+   
+
+    // check if the user exists in the db
+
+    const userInDb = await this.userRepo.findOne({ where: { id } });
+
+
+
+    if (!userInDb) {
+      throw new HttpException('User does not exist', HttpStatus.BAD_REQUEST);
+    }
+
+    const user= await this.userRepo.update(id, updatedUser);
+
+    if(user){
+     const Updated= await this.userRepo.findOne({ where: { id } });
+
+      return toUserDto(Updated);
+    }
+
+    // return toUserDto(user);
+  }
+
+
+  async delete(id:string): Promise<string>{
+
+    const user = await this.userRepo.delete(id);
+    if(user){
+      return "User Deleted";
+    }
+    return "User not deleted, error occured";
   }
 
   private _sanitizeUser(user: UserEntity) {

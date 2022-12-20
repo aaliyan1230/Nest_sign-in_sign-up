@@ -7,6 +7,9 @@ import {
     Get,
     Req,
     UseGuards,
+    Param,
+    Patch,
+    Delete
   } from '@nestjs/common';
   import { CreateUserDto } from 'src/users/dto/CreateUserdto';
   import { RegistrationStatus } from './interfaces/RegistrationStatus.interface';
@@ -15,6 +18,8 @@ import {
   import { LoginUserDto } from 'src/users/dto/LoginUserdto';
   import { JwtPayload } from './interfaces/payload.interface';
   import { JwtAuthGuard } from './jwt-auth.guard';
+  import { UpdateUserDto } from 'src/users/dto/UpdateUserdto';
+
   
   @Controller('auth')
   export class AuthController {
@@ -45,6 +50,22 @@ import {
     @Get('whoami')
     @UseGuards(JwtAuthGuard)
     public async testAuth(@Req() req: any): Promise<JwtPayload> {
+
       return req.user;
+    }
+
+    
+
+    @Patch(':id')
+    @UseGuards(JwtAuthGuard)
+    public async updateAuth(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto): Promise<JwtPayload> {
+
+      return this.authService.updateUser(id, updateUserDto);
+    }
+
+    @Delete(':id')
+    @UseGuards(JwtAuthGuard)
+    public async deleteAuth(@Param('id') id: string): Promise<string> {
+      return this.authService.deleteUser(id);
     }
   }

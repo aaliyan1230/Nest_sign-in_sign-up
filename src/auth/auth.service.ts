@@ -9,6 +9,7 @@ import { HttpException } from '@nestjs/common/exceptions';
 import { HttpStatus } from '@nestjs/common/enums';
 import { RegistrationStatus } from './interfaces/RegistrationStatus.interface';
 import { LoginStatus } from './interfaces/login-status.interface';
+import { UpdateUserDto } from 'src/users/dto/UpdateUserdto';
 
 @Injectable()
 export class AuthService {
@@ -18,8 +19,6 @@ export class AuthService {
       ) {}
 
 //       async register(){
-
-//       }
 
 // // for local authentication
 //     async validateUser(username: string, pass: string): Promise<any>{
@@ -75,6 +74,18 @@ async register(userDto: CreateUserDto): Promise<RegistrationStatus> {
     if (!user) {
       throw new HttpException('Invalid token', HttpStatus.UNAUTHORIZED);
     }
+    return user;
+  }
+
+  async updateUser(id:string, updateData:UpdateUserDto):Promise<UserDto>{
+    const user = await this.usersService.update(id, updateData);
+
+    return user;
+  }
+
+  async deleteUser(id:string):Promise<string>{
+    const user = await this.usersService.delete(id);
+
     return user;
   }
 
