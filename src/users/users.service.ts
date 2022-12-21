@@ -21,8 +21,8 @@ export class UsersService {
   ) {}
 
 
-  async findOne(username: string): Promise<UserDto> {
-    const user = await this.userRepo.findOne({ where: { username } });
+  async findOne(id: string): Promise<UserDto> {
+    const user = await this.userRepo.findOne({ where: { id } });
     return toUserDto(user);
   }
 
@@ -43,8 +43,8 @@ export class UsersService {
     return toUserDto(user);
   }
 
-  async findByPayload({ username }: any): Promise<UserDto> {
-    return await this.findOne(username);
+  async findByPayload({ id }: any): Promise<UserDto> {
+    return await this.findOne(id);
   }
 
   async create(userDto: CreateUserDto): Promise<UserDto> {
@@ -105,13 +105,13 @@ export class UsersService {
   }
 
 
-  async delete(id:string): Promise<UserDto>{
+  async delete(id:string): Promise<DeleteResult>{
     //error handling to be done
     const user = await this.userRepo.findOne({ where: { id } });
 
     if(user){
-      const deleted = await this.userRepo.remove(user);
-      return toUserDto(deleted);
+      const deleted = await this.userRepo.delete(id);
+      return deleted;
     }else{
       throw new HttpException('User does not exist', HttpStatus.BAD_REQUEST);
     }

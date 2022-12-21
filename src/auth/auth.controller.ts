@@ -52,8 +52,9 @@ import { UserDto } from 'src/users/dto/Userdto';
     @Get('whoami')
     @UseGuards(JwtAuthGuard)
     public async testAuth(@Req() req: any): Promise<JwtPayload> {
-
+      
       return req.user;
+      // return req.user.id!==null?req.user:{message:"user not"};
     }
 
     
@@ -67,7 +68,7 @@ import { UserDto } from 'src/users/dto/Userdto';
 
     @Delete(':id')
     @UseGuards(JwtAuthGuard)
-    public async deleteAuth(@Param('id') id: string): Promise<UserDto>{
+    public async deleteAuth(@Param('id') id: string): Promise<DeleteResult>{
       return this.authService.deleteUser(id);
     }
   }

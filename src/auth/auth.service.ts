@@ -84,7 +84,7 @@ async register(userDto: CreateUserDto): Promise<RegistrationStatus> {
     return user;
   }
 
-  async deleteUser(id:string):Promise<UserDto>{
+  async deleteUser(id:string):Promise<DeleteResult>{
     const user = await this.usersService.delete(id);
 
     return user;
