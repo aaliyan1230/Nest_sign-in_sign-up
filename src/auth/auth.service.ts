@@ -10,6 +10,7 @@ import { HttpStatus } from '@nestjs/common/enums';
 import { RegistrationStatus } from './interfaces/RegistrationStatus.interface';
 import { LoginStatus } from './interfaces/login-status.interface';
 import { UpdateUserDto } from 'src/users/dto/UpdateUserdto';
+import { DeleteResult } from 'typeorm';
 
 @Injectable()
 export class AuthService {
@@ -83,7 +84,7 @@ async register(userDto: CreateUserDto): Promise<RegistrationStatus> {
     return user;
   }
 
-  async deleteUser(id:string):Promise<string>{
+  async deleteUser(id:string):Promise<UserDto>{
     const user = await this.usersService.delete(id);
 
     return user;

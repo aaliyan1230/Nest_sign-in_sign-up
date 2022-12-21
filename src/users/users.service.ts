@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UserEntity } from './entity/user.entity';
-import { Repository, UpdateResult } from 'typeorm';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { toUserDto } from 'src/shared/mapper/toUserdto';
 import { UserDto } from './dto/Userdto';
@@ -69,18 +69,18 @@ export class UsersService {
   }
 
   async update(id:string, userDto: UpdateUserDto): Promise<UserDto> {
-    const { username, password, email } = userDto;
+    // const { username, password, email } = userDto;
     // console.log('userdto', userDto)
-    let updatedUser={};
-   if(username!==undefined){
-    updatedUser={...updatedUser, username};
-   }
-   if(email!==undefined){
-    updatedUser={...updatedUser, email};
-   }
-   if(password!==undefined){
-    updatedUser={...updatedUser, password};
-   }
+  //   let updatedUser={};
+  //  if(username!==undefined){
+  //   updatedUser={...updatedUser, username};
+  //  }
+  //  if(email!==undefined){
+  //   updatedUser={...updatedUser, email};
+  //  }
+  //  if(password!==undefined){
+  //   updatedUser={...updatedUser, password};
+  //  }
    
 
     // check if the user exists in the db
@@ -93,7 +93,7 @@ export class UsersService {
       throw new HttpException('User does not exist', HttpStatus.BAD_REQUEST);
     }
 
-    const user= await this.userRepo.update(id, updatedUser);
+    const user= await this.userRepo.update(id, userDto);
 
     if(user){
      const Updated= await this.userRepo.findOne({ where: { id } });
@@ -105,13 +105,17 @@ export class UsersService {
   }
 
 
-  async delete(id:string): Promise<string>{
+  async delete(id:string): Promise<UserDto>{
+    //error handling to be done
+    const user = await this.userRepo.findOne({ where: { id } });
 
-    const user = await this.userRepo.delete(id);
     if(user){
-      return "User Deleted";
+      const deleted = await this.userRepo.remove(user);
+      return toUserDto(deleted);
+    }else{
+      throw new HttpException('User does not exist', HttpStatus.BAD_REQUEST);
     }
-    return "User not deleted, error occured";
+
   }
 
   private _sanitizeUser(user: UserEntity) {

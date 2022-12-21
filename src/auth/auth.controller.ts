@@ -19,6 +19,8 @@ import {
   import { JwtPayload } from './interfaces/payload.interface';
   import { JwtAuthGuard } from './jwt-auth.guard';
   import { UpdateUserDto } from 'src/users/dto/UpdateUserdto';
+import { DeleteResult } from 'typeorm';
+import { UserDto } from 'src/users/dto/Userdto';
 
   
   @Controller('auth')
@@ -58,14 +60,14 @@ import {
 
     @Patch(':id')
     @UseGuards(JwtAuthGuard)
-    public async updateAuth(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto): Promise<JwtPayload> {
+    public async updateAuth(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto): Promise<UserDto> {
 
       return this.authService.updateUser(id, updateUserDto);
     }
 
     @Delete(':id')
     @UseGuards(JwtAuthGuard)
-    public async deleteAuth(@Param('id') id: string): Promise<string> {
+    public async deleteAuth(@Param('id') id: string): Promise<UserDto>{
       return this.authService.deleteUser(id);
     }
   }
