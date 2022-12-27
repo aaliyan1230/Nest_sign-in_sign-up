@@ -4,12 +4,14 @@ import {
   Column,
   CreateDateColumn,
   BeforeInsert,
+  ObjectID,
+  ObjectIdColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
 @Entity('users')
 export class UserEntity {
-  @PrimaryGeneratedColumn('uuid') id: string;
+  @ObjectIdColumn() id: ObjectID;
   @Column({ type: 'varchar', nullable: false, unique: true }) username: string;
   @Column({ type: 'varchar', nullable: false }) password: string;
   @Column({ type: 'varchar', nullable: false }) email: string;

@@ -19,7 +19,7 @@ import {
   import { JwtPayload } from './interfaces/payload.interface';
   import { JwtAuthGuard } from './jwt-auth.guard';
   import { UpdateUserDto } from 'src/users/dto/UpdateUserdto';
-import { DeleteResult } from 'typeorm';
+import { DeleteResult, ObjectID } from 'typeorm';
 import { UserDto } from 'src/users/dto/Userdto';
 
   
@@ -31,11 +31,11 @@ import { UserDto } from 'src/users/dto/Userdto';
     public async register(
       @Body() createUserDto: CreateUserDto,
     ): Promise<RegistrationStatus> {
-      // console.log('creuserdto', createUserDto);
+      console.log('creuserdto', createUserDto);
       const result: RegistrationStatus = await this.authService.register(
         createUserDto,
       );
-      // console.log('result', result);
+      console.log('result', result);
   
       if (!result.success) {
         throw new HttpException(result.message, HttpStatus.BAD_REQUEST, {cause: new Error(result.message)});
@@ -61,14 +61,14 @@ import { UserDto } from 'src/users/dto/Userdto';
 
     @Patch(':id')
     @UseGuards(JwtAuthGuard)
-    public async updateAuth(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto): Promise<UserDto> {
+    public async updateAuth(@Param('id') id: ObjectID, @Body() updateUserDto: UpdateUserDto): Promise<UserDto> {
 
       return this.authService.updateUser(id, updateUserDto);
     }
 
     @Delete(':id')
     @UseGuards(JwtAuthGuard)
-    public async deleteAuth(@Param('id') id: string): Promise<DeleteResult>{
+    public async deleteAuth(@Param('id') id: ObjectID): Promise<DeleteResult>{
       return this.authService.deleteUser(id);
     }
   }
