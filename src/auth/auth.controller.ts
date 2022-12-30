@@ -21,7 +21,7 @@ import {
   import { UpdateUserDto } from 'src/users/dto/UpdateUserdto';
 import { DeleteResult, ObjectID } from 'typeorm';
 import { UserDto } from 'src/users/dto/Userdto';
-
+import { Res } from '@nestjs/common/decorators';
   
   @Controller('auth')
   export class AuthController {
@@ -45,8 +45,12 @@ import { UserDto } from 'src/users/dto/Userdto';
     }
   
     @Post('login')
-    public async login(@Body() loginUserDto: LoginUserDto): Promise<LoginStatus> {
-      return await this.authService.login(loginUserDto);
+    public async login(@Body() loginUserDto: LoginUserDto, @Res({passthrough: true})response): Promise<LoginStatus> {
+      const result = await this.authService.login(loginUserDto);
+      const {accessToken, ...rest} = result;
+      response.cookie('jwt', accessToken, {httpOnly: true});
+
+      return result;
     }
   
     @Get('whoami')
