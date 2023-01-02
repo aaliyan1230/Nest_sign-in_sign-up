@@ -55,7 +55,7 @@ import { Res } from '@nestjs/common/decorators';
   
     @Get('whoami')
     @UseGuards(JwtAuthGuard)
-    public async testAuth(@Req() req: any): Promise<JwtPayload> {
+    public async testAuth(@Req() req: any) {
       
       return req.user;
       // return req.user.id!==null?req.user:{message:"user not"};

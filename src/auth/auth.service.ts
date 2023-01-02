@@ -61,6 +61,7 @@ async register(userDto: CreateUserDto): Promise<RegistrationStatus> {
     // find user in db
     const user = await this.usersService.findByLogin(loginUserDto);
 
+    console.log("before token",user);
     // generate and sign token
     const token = this._createToken(user);
 
@@ -78,7 +79,7 @@ async register(userDto: CreateUserDto): Promise<RegistrationStatus> {
     return user;
   }
 
-  async updateUser(id:ObjectID, updateData:UpdateUserDto):Promise<UserDto>{
+  async updateUser(id: ObjectID, updateData:UpdateUserDto):Promise<UserDto>{
     const user = await this.usersService.update(id, updateData);
 
     return user;
@@ -90,12 +91,14 @@ async register(userDto: CreateUserDto): Promise<RegistrationStatus> {
     return user;
   }
 
-  private _createToken({ username }: UserDto): any {
+  private _createToken({id, username, email }: UserDto): any {
     // const expiresIn = process.env.EXPIRESIN;
     const expiresIn = '1d';
 
-    const user: JwtPayload = { username };
+    const user: JwtPayload = {id, username, email };
+    console.log("while creating token",user);
     const accessToken = this.jwtService.sign(user);
+    console.log(this.jwtService.decode(accessToken));
     return {
       expiresIn,
       accessToken,
