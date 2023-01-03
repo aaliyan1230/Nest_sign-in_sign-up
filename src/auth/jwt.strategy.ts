@@ -13,10 +13,21 @@ import { UserDto } from 'src/users/dto/Userdto';
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private readonly authService: AuthService) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        JwtStrategy.extractJWT,
+        ExtractJwt.fromAuthHeaderAsBearerToken()
+      ]),
       ignoreExpiration: false,
       secretOrKey: jwtConstants.secret,
     });
+  }
+
+
+  private static extractJWT(req: any): string | null {
+    if (req.cookies && 'jwt' in req.cookies) {
+      return req.cookies.jwt;
+    }
+    return null;
   }
   
     async validate(payload: JwtPayload): Promise<UserDto> {
