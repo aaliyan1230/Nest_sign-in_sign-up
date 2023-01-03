@@ -22,6 +22,7 @@ import {
 import { DeleteResult, ObjectID } from 'typeorm';
 import { UserDto } from 'src/users/dto/Userdto';
 import { Res } from '@nestjs/common/decorators';
+import { request } from 'http';
   
   @Controller('auth')
   export class AuthController {
@@ -63,16 +64,16 @@ import { Res } from '@nestjs/common/decorators';
 
     
 
-    @Patch(':id')
+    @Patch('update')
     @UseGuards(JwtAuthGuard)
-    public async updateAuth(@Param('id') id: ObjectID, @Body() updateUserDto: UpdateUserDto): Promise<UserDto> {
+    public async updateAuth(@Req() req: any ,@Body() updateUserDto: UpdateUserDto): Promise<UserDto> {
 
-      return this.authService.updateUser(id, updateUserDto);
+      return this.authService.updateUser(req.user.username, updateUserDto);
     }
 
-    @Delete(':id')
+    @Delete('delete')
     @UseGuards(JwtAuthGuard)
-    public async deleteAuth(@Param('id') id: ObjectID): Promise<DeleteResult>{
-      return this.authService.deleteUser(id);
+    public async deleteAuth(@Req() req: any ): Promise<DeleteResult>{
+      return this.authService.deleteUser(req.user.username);
     }
   }

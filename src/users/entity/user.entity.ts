@@ -11,7 +11,7 @@ import * as bcrypt from 'bcrypt';
 
 @Entity('users')
 export class UserEntity {
-  @ObjectIdColumn() id: ObjectID;
+  @ObjectIdColumn() id: string;
   @Column({ type: 'varchar', nullable: false, unique: true }) username: string;
   @Column({ type: 'varchar', nullable: false }) password: string;
   @Column({ type: 'varchar', nullable: false }) email: string;

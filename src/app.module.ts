@@ -10,7 +10,7 @@ import { AuthService } from './auth/auth.service';
 @Module({
   imports: [AuthModule, UsersModule,  TypeOrmModule.forRoot({
     type: 'mongodb',
-    url: 'mongodb+srv://root:<password>@cluster0.uk1zp.mongodb.net/?retryWrites=true&w=majority',
+    url: 'mongodb+srv://root:UOkxG8RYAzFpNEny@cluster0.uk1zp.mongodb.net/?retryWrites=true&w=majority',
     database:'Authapp',
     entities: [
       __dirname + '/**/*.entity{.ts,.js}',

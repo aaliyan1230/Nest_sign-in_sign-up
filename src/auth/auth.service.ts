@@ -79,23 +79,23 @@ async register(userDto: CreateUserDto): Promise<RegistrationStatus> {
     return user;
   }
 
-  async updateUser(id: ObjectID, updateData:UpdateUserDto):Promise<UserDto>{
-    const user = await this.usersService.update(id, updateData);
+  async updateUser(username: string, updateData:UpdateUserDto):Promise<UserDto>{
+    const user = await this.usersService.update(username, updateData);
 
     return user;
   }
 
-  async deleteUser(id:ObjectID):Promise<DeleteResult>{
-    const user = await this.usersService.delete(id);
+  async deleteUser(username:string):Promise<DeleteResult>{
+    const user = await this.usersService.delete(username);
 
     return user;
   }
 
-  private _createToken({id, username, email }: UserDto): any {
+  private _createToken({username, email }: UserDto): any {
     // const expiresIn = process.env.EXPIRESIN;
     const expiresIn = '1d';
 
-    const user: JwtPayload = {id, username, email };
+    const user: JwtPayload = {username, email };
     console.log("while creating token",user);
     const accessToken = this.jwtService.sign(user);
     console.log(this.jwtService.decode(accessToken));

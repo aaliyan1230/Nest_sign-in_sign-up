@@ -10,6 +10,7 @@ import { HttpStatus } from '@nestjs/common/enums';
 import { CreateUserDto } from './dto/CreateUserdto';
 import { comparePasswords } from 'src/shared/utils';
 import { UpdateUserDto } from './dto/UpdateUserdto';
+import { JwtPayload } from 'src/auth/interfaces/payload.interface';
 
 export type User = any;
 
@@ -21,8 +22,8 @@ export class UsersService {
   ) {}
 
 
-  async findOne(id: ObjectID): Promise<UserDto> {
-    const user = await this.userRepo.findOne({ where: { id } });
+  async findOne(username: string): Promise<UserDto> {
+    const user = await this.userRepo.findOne({ where: { username } });
     return toUserDto(user);
   }
 
@@ -43,8 +44,8 @@ export class UsersService {
     return toUserDto(user);
   }
 
-  async findByPayload({ id }: any): Promise<UserDto> {
-    return await this.findOne(id);
+  async findByPayload({ username, email}: JwtPayload): Promise<UserDto> {
+    return await this.findOne(username);
   }
 
   async create(userDto: CreateUserDto): Promise<UserDto> {
@@ -53,8 +54,12 @@ export class UsersService {
 
     // check if the user exists in the db
     const userInDb = await this.userRepo.findOne({ where: { username } });
+    const emailInDb = await this.userRepo.findOne({ where: { email } });
     if (userInDb) {
-      throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
+      throw new HttpException('Username already exists', HttpStatus.BAD_REQUEST);
+    }
+    if (emailInDb) {
+      throw new HttpException('email already exists', HttpStatus.BAD_REQUEST);
     }
 
     const user: UserEntity = await this.userRepo.create({
@@ -68,7 +73,7 @@ export class UsersService {
     return toUserDto(user);
   }
 
-  async update(id:ObjectID, userDto: UpdateUserDto): Promise<UserDto> {
+  async update(username:string, userDto: UpdateUserDto): Promise<UserDto> {
     // const { username, password, email } = userDto;
     // console.log('userdto', userDto)
   //   let updatedUser={};
@@ -85,18 +90,16 @@ export class UsersService {
 
     // check if the user exists in the db
 
-    const userInDb = await this.userRepo.findOne({ where: { id } });
-
-
+    const userInDb = await this.userRepo.findOne({ where: { username } });
 
     if (!userInDb) {
       throw new HttpException('User does not exist', HttpStatus.BAD_REQUEST);
     }
 
-    const user= await this.userRepo.update(id, userDto);
+    const user= await this.userRepo.update(username, userDto);
 
     if(user){
-     const Updated= await this.userRepo.findOne({ where: { id } });
+     const Updated= await this.userRepo.findOne({ where: { username } });
 
       return toUserDto(Updated);
     }
@@ -105,12 +108,12 @@ export class UsersService {
   }
 
 
-  async delete(id:ObjectID): Promise<DeleteResult>{
+  async delete(username:string): Promise<DeleteResult>{
     //error handling to be done
-    const user = await this.userRepo.findOne({ where: { id } });
+    const user = await this.userRepo.findOne({ where: { username } });
 
     if(user){
-      const deleted = await this.userRepo.delete(id);
+      const deleted = await this.userRepo.delete(username);
       return deleted;
     }else{
       throw new HttpException('User does not exist', HttpStatus.BAD_REQUEST);
