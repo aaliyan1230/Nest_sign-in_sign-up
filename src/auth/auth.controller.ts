@@ -54,6 +54,15 @@ import { request } from 'http';
       return result;
     }
   
+    @Get('logout')
+    @UseGuards(JwtAuthGuard)
+    public async logout(@Res({passthrough: true})response) {
+
+      response.cookie('jwt', "", {httpOnly: true});
+
+      return {message: "User logged out"};
+    }
+  
     @Get('whoami')
     @UseGuards(JwtAuthGuard)
     public async testAuth(@Req() req: any) {
